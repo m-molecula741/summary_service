@@ -1,0 +1,42 @@
+version: "3.8"
+name: konspect
+
+services:
+   konspect_service:
+     build:
+       context: .
+       dockerfile: Dockerfile
+     container_name: konspect_service
+     env_file:
+       - .env
+     depends_on:
+       - db_konspect
+       - redis_konspect
+     command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --port=7000 --host=0.0.0.0"]
+     networks:
+       - auth
+       - front_some-net
+       
+
+   db_konspect:
+    image: postgres:15
+    container_name: db_konspect
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    networks:
+      - konspect
+
+   redis_konspect:
+    image: redis:7
+    container_name: redis_konspect
+    networks:
+      - konspect
+
+networks:
+   konspect:
+    name: konspect
+    driver: bridge
+   front_some-net:
+    external: true
