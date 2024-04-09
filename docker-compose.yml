@@ -14,7 +14,7 @@ services:
        - redis_konspect
      command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --port=7000 --host=0.0.0.0"]
      networks:
-       - auth
+       - konspect
        - front_some-net
        
 
