@@ -12,10 +12,11 @@ services:
      depends_on:
        - db_konspect
        - redis_konspect
-     command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --port=7000 --host=0.0.0.0"]
+     command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --port=8000 --host=0.0.0.0"]
      networks:
        - konspect
-       - front_some-net
+     ports:
+       - 8001:8000
        
 
    db_konspect:
@@ -38,5 +39,3 @@ networks:
    konspect:
     name: konspect
     driver: bridge
-   front_some-net:
-    external: true
