@@ -14,6 +14,7 @@ from redis import asyncio as aioredis
 
 def get_app() -> FastAPI:
     app = FastAPI(
+        docs_url="/docs",
         title=config.project_name,
         debug=config.debug,
         version=config.version,
