@@ -46,9 +46,9 @@ def get_app() -> FastAPI:
         FastAPICache.reset()
         logger.info("Redis connection close")
 
-    app.include_router(router_private, prefix="/private")
-    app.include_router(router_public, prefix="/public")
-    app.include_router(router_service, prefix="/service")
+    app.include_router(router_private, prefix="/main/private")
+    app.include_router(router_public, prefix="/main/public")
+    app.include_router(router_service, prefix="/main/service")
 
     return app
 
