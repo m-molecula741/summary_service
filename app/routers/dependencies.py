@@ -1,4 +1,3 @@
-import traceback
 from typing import Annotated
 from uuid import UUID
 
@@ -29,7 +28,6 @@ async def get_current_user(token: AuthSchema = Depends(oauth2_scheme)) -> User:
             )
 
     except Exception:
-        print(traceback.format_exc())
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
@@ -64,7 +62,7 @@ async def check_access_summary(
     if err:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not rights")
 
-    if summary_in_db.user_id != user.id:
+    if summary_in_db.user_id != user.id:  # type: ignore
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not rights")
 
     return None

@@ -40,7 +40,6 @@ class UniversityIn(UniversityBase):
     async def from_csv(cls, csv_file: bytes) -> list[UniversityIn] | None:
         lines = csv_file.decode(encoding="utf-8-sig").split("\n")
         reader = csv.DictReader(lines, delimiter=";")
-        print(reader.fieldnames)
         if reader.fieldnames != ["Id", "ShortName", "Name"]:
             return None
 

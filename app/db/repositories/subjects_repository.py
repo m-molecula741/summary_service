@@ -16,9 +16,9 @@ class SubjectsRepository(BaseRepository[SubjectModel]):
         self, query: QuerySubjects
     ) -> tuple[Sequence[SubjectModel], int | None, str | None]:
         """Получение списка сущностей с учетом пагинации и сортировки"""
-        select_count = select(func.count(self.model.id))
+        select_count = select(func.count(self.model.id)).filter(self.model.is_moderated)
 
-        stmt = select(self.model)
+        stmt = select(self.model).filter(self.model.is_moderated)
 
         if query.name:
             select_count = select_count.filter(

@@ -3,7 +3,13 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import ORJSONResponse
 
-from app.models.summary import SummaryRequest, SummaryResponse, SummaryUpdateRequest
+from app.models.summary import (
+    QuerySummaries,
+    SummariesResponse,
+    SummaryRequest,
+    SummaryResponse,
+    SummaryUpdateRequest,
+)
 from app.models.user import User
 from app.routers.dependencies import UOWDep, get_current_user
 from app.services.summaries_service import SummaryService
@@ -36,15 +42,15 @@ async def update_summary(
         if err:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
 
-    if summary_in_db.user_id != user.id:
+    if summary_in_db.user_id != user.id:  # type: ignore
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нет прав")
 
     summary_status = await SummaryService.build_summary_status(
         uow=uow,
         subject_id=summary.subject_id
         if summary.subject_id
-        else summary_in_db.subject_id,
-        teacher_id=summary.teacher_id
+        else summary_in_db.subject_id,  # type: ignore
+        teacher_id=summary.teacher_id  # type: ignore
         if summary.teacher_id
         else summary_in_db.teacher_id,
     )
@@ -69,3 +75,21 @@ async def get_private_summary_by_id(
     )
 
     return SummaryResponse.from_orm(summary)
+
+
+@router.get(
+    path="",
+    status_code=status.HTTP_200_OK,
+    response_model=SummariesResponse,
+)
+async def get_my_summaries(
+    uow: UOWDep,
+    query: QuerySummaries = Depends(),
+    user: User = Depends(get_current_user),
+) -> SummariesResponse:
+    """Ручка получения списка конспектов юзера"""
+    summaries_resp = await SummaryService.get_summaries(
+        uow=uow, query=query, user_id=user.id
+    )
+
+    return summaries_resp

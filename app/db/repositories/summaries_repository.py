@@ -1,4 +1,5 @@
 from typing import Sequence, TypeVar
+from uuid import UUID
 
 from sqlalchemy import desc, func, select
 
@@ -14,7 +15,7 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 class SummariesRepository(BaseRepository[SummaryModel]):
     async def get_summaries(  # noqa: C901
-        self, query: QuerySummaries
+        self, query: QuerySummaries, user_id: UUID = None
     ) -> tuple[Sequence[SummaryModel], int | None, str | None]:
         """Получение списка сущностей с учетом пагинации и сортировки"""
         select_count = select(func.count(self.model.id)).filter(
@@ -22,6 +23,10 @@ class SummariesRepository(BaseRepository[SummaryModel]):
         )
 
         stmt = select(self.model).filter(self.model.status == Status.approved)
+
+        if user_id:
+            select_count = select_count.filter(self.model.user_id == user_id)
+            stmt = stmt.filter(self.model.user_id == user_id)
 
         if query.name:
             select_count = select_count.filter(  # type: ignore

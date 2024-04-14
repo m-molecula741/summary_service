@@ -55,7 +55,6 @@ class BaseRepository(Generic[ModelType]):
         self, obj_ins: Sequence[ObjSchema]
     ) -> tuple[list[ModelType] | None, str | None]:
         try:
-            print(obj_ins)
             db_objs = [self.model(**obj_in.dict()) for obj_in in obj_ins]
             self.session.add_all(db_objs)
             return db_objs, None

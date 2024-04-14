@@ -155,9 +155,13 @@ class SummaryService:
         return True
 
     @classmethod
-    async def get_summaries(cls, uow: UOW, query: QuerySummaries) -> SummariesResponse:
+    async def get_summaries(
+        cls, uow: UOW, query: QuerySummaries, user_id: UUID = None
+    ) -> SummariesResponse:
         async with uow:
-            summaries, count, err = await uow.summaries.get_summaries(query=query)
+            summaries, count, err = await uow.summaries.get_summaries(
+                query=query, user_id=user_id
+            )
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
 
