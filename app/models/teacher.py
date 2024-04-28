@@ -62,7 +62,7 @@ class TeacherCreate(TeacherBase):
 
 
 class QueryTeachers(PaginationSchema):
-    """Схема запроса списка кампаний."""
+    """Схема запроса списка преподов"""
 
     subject_id: int | None = None
     full_name: str | None = None

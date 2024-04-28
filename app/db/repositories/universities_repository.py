@@ -1,6 +1,6 @@
 from typing import Sequence, TypeVar
 
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, func, select, or_
 
 from app.consts import SortType
 from app.core.logger import logger
@@ -37,15 +37,17 @@ class UniversitiesRepository(BaseRepository[UniversityModel]):
 
         if query.name:
             select_count = select_count.filter(
-                self.model.name.ilike("%" + query.name + "%")
+                or_(
+                    self.model.name.ilike("%" + query.name + "%"),
+                    self.model.short_name.ilike("%" + query.name + "%"),
+                )
             )
-            stmt = stmt.filter(self.model.name.ilike("%" + query.name + "%"))  # type: ignore
-
-        if query.short_name:
-            select_count = select_count.filter(
-                self.model.short_name.ilike("%" + query.short_name + "%")
+            stmt = stmt.filter(
+                or_(
+                    self.model.name.ilike("%" + query.name + "%"),
+                    self.model.short_name.ilike("%" + query.name + "%"),
+                )
             )
-            stmt = stmt.filter(self.model.short_name.ilike("%" + query.short_name + "%"))  # type: ignore
 
         # Применяем параметры пагинации
         if query.page_size is not None:

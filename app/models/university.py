@@ -64,9 +64,8 @@ class UniversityResponse(UniversityBase):
 
 
 class QueryUniversities(PaginationSchema):
-    """Схема запроса списка кампаний."""
+    """Схема запроса списка университетов"""
 
-    short_name: str | None = None
     name: str | None = None
 
     @validator("sort_by")

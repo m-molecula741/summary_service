@@ -14,15 +14,19 @@ from redis import asyncio as aioredis
 
 def get_app() -> FastAPI:
     app = FastAPI(
-        openapi_url="/main/openapi.json",
-        docs_url="/main/docs",
+        openapi_url="/api/main/openapi.json",
+        docs_url="/api/main/docs",
         title=config.project_name,
         debug=config.debug,
         version=config.version,
         default_response_class=ORJSONResponse,
     )
 
-    origins = ["*"]
+    origins = [
+        "http://localhost:3000",
+        "htpp://localhost",
+        "https://la-parole.ru",
+    ]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
@@ -46,9 +50,9 @@ def get_app() -> FastAPI:
         FastAPICache.reset()
         logger.info("Redis connection close")
 
-    app.include_router(router_private, prefix="/main/private")
-    app.include_router(router_public, prefix="/main/public")
-    app.include_router(router_service, prefix="/main/service")
+    app.include_router(router_private, prefix="/api/main/private")
+    app.include_router(router_public, prefix="/api/main/public")
+    app.include_router(router_service, prefix="/api/main/service")
 
     return app
 
