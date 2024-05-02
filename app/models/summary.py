@@ -21,6 +21,9 @@ from app.models.university import UniversityResponse
 
 if TYPE_CHECKING:
     from app.models.lecture import LectureModel
+    from app.models.university import UniversityModel
+    from app.models.subject import SubjectModel
+    from app.models.teacher import TeacherModel
 
 
 class SummaryModel(Base):
@@ -31,13 +34,22 @@ class SummaryModel(Base):
         sa.String(255), nullable=False, doc="Наименование_конспекта"
     )
     university_id: Mapped[int] = mapped_column(
-        sa.Integer, nullable=False, doc="Идентификатор университета"
+        sa.Integer,
+        sa.ForeignKey("university.id"),
+        nullable=False,
+        doc="Идентификатор университета",
     )
     subject_id: Mapped[int] = mapped_column(
-        sa.Integer, nullable=False, doc="Идентификатор предмета"
+        sa.Integer,
+        sa.ForeignKey("subject.id"),
+        nullable=False,
+        doc="Идентификатор предмета",
     )
     teacher_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True), nullable=False, doc="Идентификатор преподавателя"
+        UUID(as_uuid=True),
+        sa.ForeignKey("teacher.id"),
+        nullable=False,
+        doc="Идентификатор преподавателя",
     )
     status: Mapped[Status] = mapped_column(sa.Enum(Status), doc="Статус конспекта")
     moderation_comment: Mapped[str] = mapped_column(
@@ -57,6 +69,9 @@ class SummaryModel(Base):
         nullable=True,
     )
     lectures: Mapped[list[LectureModel]] = relationship(back_populates="summary")
+    university: Mapped[UniversityModel] = relationship(back_populates="summaries")
+    subject: Mapped[SubjectModel] = relationship(back_populates="summaries")
+    teacher: Mapped[TeacherModel] = relationship(back_populates="summaries")
 
 
 class SummaryBase(ObjSchema):
@@ -140,6 +155,9 @@ class SummaryShortResponse(ObjSchema):
     id: py_UUID
     name: str
     user_id: py_UUID
+    university_name: str
+    subject_name: str
+    teacher_full_name: str
 
 
 class QuerySummaries(PaginationSchema):

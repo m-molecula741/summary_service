@@ -16,6 +16,13 @@ class TeacherService:
     @classmethod
     async def create_teacher(cls, uow: UOW, teacher: TeacherRequest) -> UUID:
         async with uow:
+            teacher_out = await uow.teachers.find_one(full_name=teacher.full_name)
+            if err and err != "Data not found":
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
+
+            if teacher_out:
+                return teacher_out.id
+
             teacher, err = await uow.teachers.add(
                 obj_in=TeacherCreate(**teacher.dict(), id=uuid7())
             )

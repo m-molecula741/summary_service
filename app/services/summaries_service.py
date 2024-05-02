@@ -11,6 +11,7 @@ from app.models.summary import (
     QuerySummaries,
     SummariesResponse,
     SummaryCreate,
+    SummaryModel,
     SummaryRequest,
     SummaryResponse,
     SummaryShortResponse,
@@ -160,7 +161,13 @@ class SummaryService:
     ) -> SummariesResponse:
         async with uow:
             summaries, count, err = await uow.summaries.get_summaries(
-                query=query, user_id=user_id
+                query=query,
+                user_id=user_id,
+                loadopt=[
+                    SummaryModel.university,
+                    SummaryModel.subject,
+                    SummaryModel.teacher,
+                ],
             )
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
@@ -169,7 +176,12 @@ class SummaryService:
 
             summaries = [
                 SummaryShortResponse(
-                    id=summary.id, name=summary.name, user_id=summary.user_id
+                    id=summary.id,
+                    name=summary.name,
+                    user_id=summary.user_id,
+                    university_name=summary.university.name,
+                    subject_name=summary.subject.name,
+                    teacher_full_name=summary.teacher.full_name,
                 )
                 for summary in summaries
             ]

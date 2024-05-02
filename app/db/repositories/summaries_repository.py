@@ -2,6 +2,7 @@ from typing import Sequence, TypeVar
 from uuid import UUID
 
 from sqlalchemy import desc, func, select
+from sqlalchemy.orm import selectinload, QueryableAttribute
 
 from app.consts import SortType
 from app.core.logger import logger
@@ -15,14 +16,21 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 class SummariesRepository(BaseRepository[SummaryModel]):
     async def get_summaries(  # noqa: C901
-        self, query: QuerySummaries, user_id: UUID = None
+        self,
+        query: QuerySummaries,
+        user_id: UUID = None,
+        loadopt: QueryableAttribute | None = None,
     ) -> tuple[Sequence[SummaryModel], int | None, str | None]:
         """Получение списка сущностей с учетом пагинации и сортировки"""
         select_count = select(func.count(self.model.id)).filter(
             self.model.status == Status.approved
         )
 
-        stmt = select(self.model).filter(self.model.status == Status.approved)
+        stmt = (
+            select(self.model)
+            .filter(self.model.status == Status.approved)
+            .options(*[selectinload(opt) for opt in loadopt])
+        )
 
         if user_id:
             select_count = select_count.filter(self.model.user_id == user_id)

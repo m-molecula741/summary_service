@@ -16,6 +16,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.models.university import UniversityModel
+    from app.models.summary import SummaryModel
 
 
 class TeacherModel(Base):
@@ -23,7 +24,7 @@ class TeacherModel(Base):
 
     id: Mapped[UUID] = mapped_column(UUID(as_uuid=True), primary_key=True)
     full_name: Mapped[str] = mapped_column(
-        sa.String(255), nullable=False, index=True, doc="Полное имя"
+        sa.String(255), nullable=False, index=True, unique=True, doc="Полное имя"
     )
     date_birth: Mapped[date] = mapped_column(
         sa.Date, nullable=True, doc="Дата рождения"
@@ -43,6 +44,7 @@ class TeacherModel(Base):
         sa.Boolean, nullable=False, doc="Статус модерации"
     )
     university: Mapped[UniversityModel] = relationship(back_populates="teachers")
+    summaries: Mapped[list[SummaryModel]] = relationship(back_populates="teacher")
 
 
 class TeacherBase(ObjSchema):

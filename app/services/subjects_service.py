@@ -13,6 +13,13 @@ class SubjectService:
     @classmethod
     async def add_subject(cls, uow: UOW, subject: SubjectBase) -> int:
         async with uow:
+            subject_out, err = await uow.subjects.find_one(name=subject.name)
+            if err and err != "Data not found":
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
+
+            if subject_out:
+                return subject_out.id
+
             subject, err = await uow.subjects.add(
                 obj_in=SubjectCreate(name=subject.name)
             )

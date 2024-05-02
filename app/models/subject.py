@@ -4,10 +4,15 @@ import sqlalchemy as sa
 from fastapi import HTTPException
 from humps import decamelize
 from pydantic import validator
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.base_schemas import ObjSchema, PaginatedResponse, PaginationSchema
 from app.db.database import Base
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from app.models.summary import SummaryModel
 
 
 class SubjectModel(Base):
@@ -15,11 +20,12 @@ class SubjectModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(
-        sa.String(255), nullable=False, doc="Наименование"
+        sa.String(255), nullable=False, unique=True, index=True, doc="Наименование"
     )
     is_moderated: Mapped[bool] = mapped_column(
         sa.Boolean, nullable=False, doc="Статус модерации"
     )
+    summaries: Mapped[list[SummaryModel]] = relationship(back_populates="subject")
 
 
 class SubjectBase(ObjSchema):

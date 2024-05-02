@@ -14,6 +14,7 @@ from app.db.database import Base
 
 if TYPE_CHECKING:
     from app.models.teacher import TeacherModel
+    from app.models.summary import SummaryModel
 
 
 class UniversityModel(Base):
@@ -21,12 +22,17 @@ class UniversityModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     short_name: Mapped[str] = mapped_column(
-        sa.String(50), nullable=False, doc="Краткое наименование"
+        sa.String(50),
+        nullable=False,
+        unique=True,
+        index=True,
+        doc="Краткое наименование",
     )
     name: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, doc="Наименование"
     )
     teachers: Mapped[list[TeacherModel]] = relationship(back_populates="university")
+    summaries: Mapped[list[SummaryModel]] = relationship(back_populates="university")
 
 
 class UniversityBase(ObjSchema):
