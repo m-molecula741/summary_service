@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     debug: bool = Field(default=False)
     log_level: str = Field(default="INFO")
     environment: str | None = Field(default=None)
+    public_prefix: str = Field(default="/api/main/public")
+    private_prefix: str = Field(default="/api/main/private")
+    admin_prefix: str = Field(default="/api/main/service")
 
     postgres_host: str = Field(default="localhost")
     postgres_port: int = Field(default=5432)
@@ -26,6 +29,8 @@ class Settings(BaseSettings):
     redis_port: int = Field(default=6379)
 
     redis_cache_time: int = Field(default=600)
+
+    domain: str = Field(default="localhost")
 
     bot_token: str = Field(default="")
     chat_id: str = Field(default="")

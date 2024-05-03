@@ -23,3 +23,4 @@ class FileModel(Base):
 class FileInfoResponse(ObjSchema):
     id: str
     name: str
+    file_url: str

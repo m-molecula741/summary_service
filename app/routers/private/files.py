@@ -5,6 +5,7 @@ from app.models.file import FileInfoResponse
 from app.models.user import User
 from app.routers.dependencies import UOWDep, get_current_user
 from app.utils.telegram_utils import save_file
+from app.core.config import config
 
 router = APIRouter()
 
@@ -23,10 +24,12 @@ async def upload_pdf_file(
         )
 
     response = await save_file(file=file)
+    file_id = response.json()["result"]["document"]["file_id"]
 
     file_info_resp = FileInfoResponse(
-        id=response.json()["result"]["document"]["file_id"],
+        id=file_id,
         name=response.json()["result"]["document"]["file_name"],
+        file_url=f"https://{config.domain}/{config.public_prefix}/files?file_id={file_id}"
     )
 
     return file_info_resp
