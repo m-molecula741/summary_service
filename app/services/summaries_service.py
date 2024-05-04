@@ -167,6 +167,7 @@ class SummaryService:
                     SummaryModel.university,
                     SummaryModel.subject,
                     SummaryModel.teacher,
+                    SummaryModel.lectures
                 ],
             )
             if err:
@@ -177,9 +178,9 @@ class SummaryService:
             summaries = [
                 SummaryShortResponse(
                     id=summary.id,
-                    name=summary.name,
+                    name=f"{summary.name} ({len(summary.lectures)})",
                     user_id=summary.user_id,
-                    university_name=summary.university.name,
+                    university_name=summary.university.short_name,
                     subject_name=summary.subject.name,
                     teacher_full_name=summary.teacher.full_name,
                 )

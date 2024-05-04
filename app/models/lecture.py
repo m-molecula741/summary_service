@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date as py_date
 from typing import TYPE_CHECKING
 from uuid import UUID as py_UUID
 
@@ -40,9 +40,9 @@ class LectureModel(Base):
         nullable=False,
         doc="Идентификатор конспекта",
     )
-    date: Mapped[datetime] = mapped_column(
-        sa.DateTime(timezone=True),
-        default=datetime.utcnow,
+    date: Mapped[py_date] = mapped_column(
+        sa.Date,
+        default=py_date.today,
         nullable=False,
     )
     summary: Mapped[SummaryModel] = relationship(back_populates="lectures")
@@ -74,3 +74,4 @@ class LectureUpdate(LectureBase):
 
 class LectureResponse(LectureBase):
     id: py_UUID
+    date: py_date

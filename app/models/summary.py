@@ -59,12 +59,12 @@ class SummaryModel(Base):
         UUID(as_uuid=True), nullable=False, doc="Идентификатор пользователя"
     )
     created_at: Mapped[datetime] = mapped_column(
-        sa.DateTime(timezone=True),
+        sa.DateTime,
         default=datetime.utcnow,
         nullable=False,
     )
     updated_at: Mapped[datetime] = mapped_column(
-        sa.DateTime(timezone=True),
+        sa.DateTime,
         onupdate=datetime.utcnow,
         nullable=True,
     )

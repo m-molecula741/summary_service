@@ -16,7 +16,7 @@ class TeacherService:
     @classmethod
     async def create_teacher(cls, uow: UOW, teacher: TeacherRequest) -> UUID:
         async with uow:
-            teacher_out = await uow.teachers.find_one(full_name=teacher.full_name)
+            teacher_out, err = await uow.teachers.find_one(full_name=teacher.full_name)
             if err and err != "Data not found":  # noqa: F821
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
 
