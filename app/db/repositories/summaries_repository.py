@@ -50,7 +50,7 @@ class SummariesRepository(BaseRepository[SummaryModel]):
 
         if query.subject_id:
             select_count = select_count.filter(  # type: ignore
-                self.model.subject_id == query.university_id
+                self.model.subject_id == query.subject_id
             )
             stmt = stmt.filter(self.model.subject_id == query.subject_id)  # type: ignore
 
