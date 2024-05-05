@@ -67,12 +67,10 @@ async def update_summary(
     response_model=SummaryResponse,
 )
 async def get_private_summary_by_id(
-    summary_id: UUID, uow: UOWDep, _ = Depends(check_access_summary)
+    summary_id: UUID, uow: UOWDep, _=Depends(check_access_summary)
 ) -> SummaryResponse:
     """Ручка получения конспекта"""
-    summary = await SummaryService.get_summary_by_id(
-        uow=uow, summary_id=summary_id
-    )
+    summary = await SummaryService.get_summary_by_id(uow=uow, summary_id=summary_id)
 
     return SummaryResponse.from_orm(summary)
 

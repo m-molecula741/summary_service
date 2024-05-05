@@ -73,12 +73,17 @@ class SummaryService:
 
     @classmethod
     async def get_summary_by_id(
-        cls, uow: UOW, summary_id: UUID
+        cls, uow: UOW, summary_id: UUID, is_public: bool = False
     ) -> SummaryResponse:
         async with uow:
             summary_in_db, err = await uow.summaries.find_one(id=summary_id)
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
+
+            if is_public and summary_in_db.status != Status.approved:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="No rights"
+                )
 
             universtity_in_db, err = await uow.universities.find_one(
                 id=summary_in_db.university_id
@@ -185,7 +190,7 @@ class SummaryService:
                     subject_name=summary.subject.name,
                     teacher_full_name=summary.teacher.full_name,
                     status=summary.status,
-                    lectures_count=len(summary.lectures)
+                    lectures_count=len(summary.lectures),
                 )
                 for summary in summaries
             ]

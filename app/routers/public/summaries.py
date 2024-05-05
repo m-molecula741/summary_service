@@ -16,7 +16,9 @@ router = APIRouter()
 )
 async def get_summary_by_id(summary_id: UUID, uow: UOWDep) -> SummaryResponse:
     """Ручка получения конспекта"""
-    summary = await SummaryService.get_summary_by_id(uow=uow, summary_id=summary_id)
+    summary = await SummaryService.get_summary_by_id(
+        uow=uow, summary_id=summary_id, is_public=True
+    )
 
     return SummaryResponse.from_orm(summary)
 

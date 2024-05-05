@@ -27,7 +27,9 @@ class SummariesRepository(BaseRepository[SummaryModel]):
         stmt = select(self.model).options(*[selectinload(opt) for opt in loadopt])
 
         if is_superuser:
-            select_count = select_count.filter(self.model.status == Status.on_moderation)
+            select_count = select_count.filter(
+                self.model.status == Status.on_moderation
+            )
             stmt = stmt.filter(self.model.status == Status.on_moderation)
 
         if user_id:
