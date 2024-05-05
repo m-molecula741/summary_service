@@ -60,9 +60,9 @@ async def check_access_summary(
     summary_id = await get_id_from_request(request=request, id_name="summary_id")
     summary_in_db, err = await uow.summaries.find_one(id=summary_id)
     if err:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not rights")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     if summary_in_db.user_id != user.id:  # type: ignore
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not rights")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     return None

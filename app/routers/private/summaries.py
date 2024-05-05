@@ -11,7 +11,7 @@ from app.models.summary import (
     SummaryUpdateRequest,
 )
 from app.models.user import User
-from app.routers.dependencies import UOWDep, get_current_user
+from app.routers.dependencies import UOWDep, check_access_summary, get_current_user
 from app.services.summaries_service import SummaryService
 
 router = APIRouter()
@@ -67,11 +67,11 @@ async def update_summary(
     response_model=SummaryResponse,
 )
 async def get_private_summary_by_id(
-    summary_id: UUID, uow: UOWDep, user: User = Depends(get_current_user)
+    summary_id: UUID, uow: UOWDep, _ = Depends(check_access_summary)
 ) -> SummaryResponse:
     """Ручка получения конспекта"""
     summary = await SummaryService.get_summary_by_id(
-        uow=uow, summary_id=summary_id, user_id=user.id
+        uow=uow, summary_id=summary_id
     )
 
     return SummaryResponse.from_orm(summary)

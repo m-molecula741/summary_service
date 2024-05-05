@@ -73,16 +73,12 @@ class SummaryService:
 
     @classmethod
     async def get_summary_by_id(
-        cls, uow: UOW, summary_id: UUID, user_id: UUID | None = None
+        cls, uow: UOW, summary_id: UUID
     ) -> SummaryResponse:
         async with uow:
             summary_in_db, err = await uow.summaries.find_one(id=summary_id)
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
-            await SummaryResponse.check_conspect_access(
-                user_id=user_id, summary=summary_in_db
-            )
 
             universtity_in_db, err = await uow.universities.find_one(
                 id=summary_in_db.university_id
