@@ -29,7 +29,7 @@ async def upload_pdf_file(
     file_info_resp = FileInfoResponse(
         id=file_id,
         name=response.json()["result"]["document"]["file_name"],
-        file_url=f"https://{config.domain}{config.public_prefix}/files?file_id={file_id}"
+        file_url=f"https://{config.domain}{config.public_prefix}/files?file_id={file_id}",
     )
 
     return file_info_resp

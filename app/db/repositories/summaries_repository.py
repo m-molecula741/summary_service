@@ -19,22 +19,23 @@ class SummariesRepository(BaseRepository[SummaryModel]):
         self,
         query: QuerySummaries,
         user_id: UUID = None,
+        is_superuser: bool = False,
         loadopt: QueryableAttribute | None = None,
     ) -> tuple[Sequence[SummaryModel], int | None, str | None]:
         """Получение списка сущностей с учетом пагинации и сортировки"""
-        select_count = select(func.count(self.model.id)).filter(
-            self.model.status == Status.approved
-        )
+        select_count = select(func.count(self.model.id))
+        stmt = select(self.model).options(*[selectinload(opt) for opt in loadopt])
 
-        stmt = (
-            select(self.model)
-            .filter(self.model.status == Status.approved)
-            .options(*[selectinload(opt) for opt in loadopt])
-        )
+        if is_superuser:
+            select_count = select_count.filter(self.model.status == Status.on_moderation)
+            stmt = stmt.filter(self.model.status == Status.on_moderation)
 
         if user_id:
             select_count = select_count.filter(self.model.user_id == user_id)
             stmt = stmt.filter(self.model.user_id == user_id)
+        elif not user_id and not is_superuser:
+            select_count = select_count.filter(self.model.status == Status.approved)
+            stmt = stmt.filter(self.model.status == Status.approved)
 
         if query.name:
             select_count = select_count.filter(  # type: ignore

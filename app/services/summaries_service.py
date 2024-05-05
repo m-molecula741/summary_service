@@ -157,17 +157,22 @@ class SummaryService:
 
     @classmethod
     async def get_summaries(
-        cls, uow: UOW, query: QuerySummaries, user_id: UUID = None
+        cls,
+        uow: UOW,
+        query: QuerySummaries,
+        user_id: UUID = None,
+        is_superuser: bool = False,
     ) -> SummariesResponse:
         async with uow:
             summaries, count, err = await uow.summaries.get_summaries(
                 query=query,
                 user_id=user_id,
+                is_superuser=is_superuser,
                 loadopt=[
                     SummaryModel.university,
                     SummaryModel.subject,
                     SummaryModel.teacher,
-                    SummaryModel.lectures
+                    SummaryModel.lectures,
                 ],
             )
             if err:

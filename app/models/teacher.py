@@ -50,6 +50,7 @@ class TeacherCreate(TeacherBase):
 
 class QueryTeachers(PaginationSchema):
     """Схема запроса списка преподов"""
+
     full_name: str | None = None
 
     @validator("sort_by")

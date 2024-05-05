@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import ORJSONResponse
 
 from app.models.summary import (
+    QuerySummaries,
+    SummariesResponse,
     SummaryApprovedStatus,
     SummaryChangeStatusRequest,
     SummaryRejectedStatus,
@@ -53,3 +55,21 @@ async def set_rejected_status(
         ),
     )
     return ORJSONResponse(content=is_updated, status_code=status.HTTP_200_OK)
+
+
+@router.get(
+    path="",
+    status_code=status.HTTP_200_OK,
+    response_model=SummariesResponse,
+)
+async def get_summaries_on_moderation(
+    uow: UOWDep,
+    query: QuerySummaries = Depends(),
+    # _: User = Depends(check_is_superuser),
+) -> SummariesResponse:
+    """Ручка получения списка конспектов для админа"""
+    summaries_resp = await SummaryService.get_summaries(
+        uow=uow, query=query, is_superuser=True
+    )
+
+    return summaries_resp
