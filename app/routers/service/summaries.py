@@ -65,7 +65,7 @@ async def set_rejected_status(
 async def get_summaries_on_moderation(
     uow: UOWDep,
     query: QuerySummaries = Depends(),
-    # _: User = Depends(check_is_superuser),
+    _: User = Depends(check_is_superuser),
 ) -> SummariesResponse:
     """Ручка получения списка конспектов для админа"""
     summaries_resp = await SummaryService.get_summaries(
