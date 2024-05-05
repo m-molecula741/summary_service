@@ -158,6 +158,8 @@ class SummaryShortResponse(ObjSchema):
     university_name: str
     subject_name: str
     teacher_full_name: str
+    status: Status
+    lectures_count: int
 
 
 class QuerySummaries(PaginationSchema):

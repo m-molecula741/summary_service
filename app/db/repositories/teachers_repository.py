@@ -23,12 +23,6 @@ class TeachersRepository(BaseRepository[TeacherModel]):
             )
             stmt = stmt.filter(self.model.full_name.ilike("%" + query.full_name + "%"))  # type: ignore
 
-        if query.subject_id:
-            select_count = select_count.filter(
-                self.model.subject_ids.contains([query.subject_id])
-            )
-            stmt = stmt.filter(self.model.subject_ids.contains([query.subject_id]))
-
         # Применяем параметры пагинации
         if query.page_size is not None:
             stmt = stmt.offset((query.page - 1) * query.page_size)  # type: ignore

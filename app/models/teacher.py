@@ -15,7 +15,6 @@ from app.core.base_schemas import ObjSchema, PaginatedResponse, PaginationSchema
 from app.db.database import Base
 
 if TYPE_CHECKING:
-    from app.models.university import UniversityModel
     from app.models.summary import SummaryModel
 
 
@@ -29,29 +28,15 @@ class TeacherModel(Base):
     date_birth: Mapped[date] = mapped_column(
         sa.Date, nullable=True, doc="Дата рождения"
     )
-    university_id: Mapped[int] = mapped_column(
-        sa.Integer,
-        sa.ForeignKey("university.id"),
-        nullable=False,
-        doc="Идентификатор университета",
-    )
-    subject_ids: Mapped[list[int]] = mapped_column(
-        ARRAY(sa.Integer),
-        nullable=False,
-        doc="Идентификаторы предметов",
-    )
     is_moderated: Mapped[bool] = mapped_column(
         sa.Boolean, nullable=False, doc="Статус модерации"
     )
-    university: Mapped[UniversityModel] = relationship(back_populates="teachers")
     summaries: Mapped[list[SummaryModel]] = relationship(back_populates="teacher")
 
 
 class TeacherBase(ObjSchema):
     full_name: str
     date_birth: date
-    university_id: int
-    subject_ids: list[int]
 
 
 class TeacherRequest(TeacherBase):
@@ -65,8 +50,6 @@ class TeacherCreate(TeacherBase):
 
 class QueryTeachers(PaginationSchema):
     """Схема запроса списка преподов"""
-
-    subject_id: int | None = None
     full_name: str | None = None
 
     @validator("sort_by")
@@ -94,8 +77,6 @@ class TeacherUpdateRequest(ObjSchema):
     id: py_UUID
     full_name: str | None
     date_birth: date | None
-    university_id: int | None
-    subject_ids: list[int] | None
 
 
 class TeacherUpdate(ObjSchema):

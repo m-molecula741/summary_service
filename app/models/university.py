@@ -13,7 +13,6 @@ from app.core.base_schemas import ObjSchema, PaginatedResponse, PaginationSchema
 from app.db.database import Base
 
 if TYPE_CHECKING:
-    from app.models.teacher import TeacherModel
     from app.models.summary import SummaryModel
 
 
@@ -31,7 +30,6 @@ class UniversityModel(Base):
     name: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, doc="Наименование"
     )
-    teachers: Mapped[list[TeacherModel]] = relationship(back_populates="university")
     summaries: Mapped[list[SummaryModel]] = relationship(back_populates="university")
 
 

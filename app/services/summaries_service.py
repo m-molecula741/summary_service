@@ -178,11 +178,13 @@ class SummaryService:
             summaries = [
                 SummaryShortResponse(
                     id=summary.id,
-                    name=f"{summary.name} ({len(summary.lectures)})",
+                    name=summary.name,
                     user_id=summary.user_id,
                     university_name=summary.university.short_name,
                     subject_name=summary.subject.name,
                     teacher_full_name=summary.teacher.full_name,
+                    status=summary.status,
+                    lectures_count=len(summary.lectures)
                 )
                 for summary in summaries
             ]
