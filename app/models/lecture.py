@@ -53,6 +53,7 @@ class LectureBase(ObjSchema):
     description: str
     pdf_file_url: str
     video_url: str | None = None
+    date: py_date
 
 
 class LectureCreateRequest(LectureBase):
@@ -74,4 +75,3 @@ class LectureUpdate(LectureBase):
 
 class LectureResponse(LectureBase):
     id: py_UUID
-    date: py_date

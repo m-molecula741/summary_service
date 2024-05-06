@@ -14,8 +14,22 @@ from app.models.lecture import (
 
 class LectureService:
     @classmethod
-    async def add_lecture(cls, uow: UOW, lecture: LectureCreateRequest) -> UUID:
+    async def add_lecture(
+        cls, uow: UOW, lecture: LectureCreateRequest, user_id: UUID
+    ) -> UUID:
         async with uow:
+            summary, err = await uow.summaries.find_one(id=lecture.summary_id)
+            if err:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=err,
+                )
+
+            if summary.user_id != user_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="No rights"
+                )
+
             lecture_in_db, err = await uow.lectures.add(
                 obj_in=LectureCreate(
                     **lecture.dict(),

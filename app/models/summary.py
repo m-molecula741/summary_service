@@ -100,7 +100,7 @@ class SummaryBaseUpdate(ObjSchema):
 
 
 class SummaryUpdateRequest(SummaryBaseUpdate):
-    id: py_UUID
+    pass
 
 
 class SummaryUpdate(SummaryBaseUpdate):

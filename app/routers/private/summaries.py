@@ -43,7 +43,7 @@ async def update_summary(
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
 
     if summary_in_db.user_id != user.id:  # type: ignore
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нет прав")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     summary_status = await SummaryService.build_summary_status(
         uow=uow,
