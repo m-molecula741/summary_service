@@ -1,7 +1,8 @@
 from typing import Sequence, TypeVar
 from uuid import UUID
+from app.core.base_schemas import ObjSchema
 
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, func, select, update
 from sqlalchemy.orm import selectinload, QueryableAttribute
 
 from app.consts import SortType
@@ -89,3 +90,36 @@ class SummariesRepository(BaseRepository[SummaryModel]):
         except Exception as e:
             logger.error(f"DB error for {stmt}: {str(e)}")
             return [], None, f"DB error: {str(e)}"
+
+    async def find_summary(
+        self, loadopt: QueryableAttribute | None = None, **filter_by
+    ) -> tuple[ModelType | None, str | None]:
+        try:
+            stmt = (
+                select(self.model)
+                .filter_by(**filter_by)
+                .options(*[selectinload(opt) for opt in loadopt])
+            )
+            res = await self.session.scalar(stmt)  # type: ignore
+        except Exception as e:
+            logger.error(f"DB error: {e}")
+            return None, f"DB error: {e}"
+        if res is None:
+            return None, "Data not found"
+
+        return res, None
+
+    async def update(
+        self, id: int | UUID, obj_in: ObjSchema
+    ) -> tuple[bool | None, str | None]:
+        try:
+            stmt = (
+                update(self.model)  # type: ignore
+                .values(**obj_in.dict())
+                .filter_by(id=id)
+            )
+            await self.session.execute(stmt)
+        except Exception as e:
+            logger.error(f"DB error from update: {e}")
+            return None, f"DB error from update: {e}"
+        return True, None

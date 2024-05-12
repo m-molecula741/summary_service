@@ -34,16 +34,15 @@ async def create_summary(
 
 @router.patch(path="", status_code=status.HTTP_200_OK, response_model=bool)
 async def update_summary(
-    summary: SummaryUpdateRequest, uow: UOWDep, user: User = Depends(get_current_user)
+    summary: SummaryUpdateRequest,
+    uow: UOWDep,
+    user: User = Depends(check_access_summary),
 ) -> ORJSONResponse:
     """Ручка обновления конспекта"""
     async with uow:
         summary_in_db, err = await uow.summaries.find_one(id=summary.id)
         if err:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
-    if summary_in_db.user_id != user.id:  # type: ignore
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     summary_status = await SummaryService.build_summary_status(
         uow=uow,

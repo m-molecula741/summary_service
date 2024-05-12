@@ -88,3 +88,20 @@ async def check_access_lecture(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     return None
+
+
+async def check_access_lecture_for_add(
+    request: Request, uow: UOWDep, user: User = Depends(get_current_user)
+) -> None:
+    summary_id = await get_id_from_request(
+        request=request, query_id_name="summary_id", body_id_name="summary_id"
+    )
+
+    summary_in_db, err = await uow.summaries.find_one(id=summary_id)
+    if err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
+
+    if summary_in_db.user_id != user.id:  # type: ignore
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
+
+    return None

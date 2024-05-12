@@ -5,7 +5,11 @@ from fastapi.responses import ORJSONResponse
 
 from app.models.lecture import LectureCreateRequest, LectureUpdateRequest
 from app.models.user import User
-from app.routers.dependencies import UOWDep, check_access_lecture, get_current_user
+from app.routers.dependencies import (
+    UOWDep,
+    check_access_lecture,
+    check_access_lecture_for_add,
+)
 from app.services.lectures_service import LectureService
 
 router = APIRouter()
@@ -13,12 +17,12 @@ router = APIRouter()
 
 @router.post(path="", status_code=status.HTTP_201_CREATED, response_model=UUID)
 async def create_lecture(
-    lecture: LectureCreateRequest, uow: UOWDep, user: User = Depends(get_current_user)
+    lecture: LectureCreateRequest,
+    uow: UOWDep,
+    user: User = Depends(check_access_lecture_for_add),
 ) -> ORJSONResponse:
     """Ручка создания лекции"""
-    lecture_id = await LectureService.add_lecture(
-        uow=uow, lecture=lecture, user_id=user.id
-    )
+    lecture_id = await LectureService.add_lecture(uow=uow, lecture=lecture)
     return ORJSONResponse(content=lecture_id, status_code=status.HTTP_201_CREATED)
 
 

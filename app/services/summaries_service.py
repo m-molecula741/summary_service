@@ -76,7 +76,15 @@ class SummaryService:
         cls, uow: UOW, summary_id: UUID, is_public: bool = False
     ) -> SummaryResponse:
         async with uow:
-            summary_in_db, err = await uow.summaries.find_one(id=summary_id)
+            summary_in_db, err = await uow.summaries.find_summary(
+                loadopt=[
+                    SummaryModel.university,
+                    SummaryModel.subject,
+                    SummaryModel.teacher,
+                    SummaryModel.lectures,
+                ],
+                id=summary_id,
+            )
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
 
@@ -85,39 +93,15 @@ class SummaryService:
                     status_code=status.HTTP_403_FORBIDDEN, detail="No rights"
                 )
 
-            universtity_in_db, err = await uow.universities.find_one(
-                id=summary_in_db.university_id
-            )
-            if err:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
-            subject_in_db, err = await uow.subjects.find_one(
-                id=summary_in_db.subject_id
-            )
-            if err:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
-            teacher_in_db, err = await uow.teachers.find_one(
-                id=summary_in_db.teacher_id
-            )
-            if err:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
-            lectures, err = await uow.lectures.get_lectures_by_summary_id(
-                summary_id=summary_in_db.id
-            )
-            if err:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
-
             summary_resp = SummaryResponse(
                 id=summary_in_db.id,
                 name=summary_in_db.name,
                 user_id=summary_in_db.user_id,
-                university=universtity_in_db,
-                subject=subject_in_db,
-                teacher=teacher_in_db,
+                university=summary_in_db.university,
+                subject=summary_in_db.subject,
+                teacher=summary_in_db.teacher,
                 status=summary_in_db.status,
-                lectures=lectures if lectures else [],
+                lectures=summary_in_db.lectures,
             )
 
         return summary_resp

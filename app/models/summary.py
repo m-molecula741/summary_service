@@ -100,7 +100,7 @@ class SummaryBaseUpdate(ObjSchema):
 
 
 class SummaryUpdateRequest(SummaryBaseUpdate):
-    pass
+    id: py_UUID
 
 
 class SummaryUpdate(SummaryBaseUpdate):
@@ -113,6 +113,7 @@ class SummaryResponse(ObjSchema):
     university: UniversityResponse
     subject: SubjectResponse
     teacher: TeacherResponse
+    moderation_comment: str | None
     user_id: py_UUID
     status: Status
     lectures: list[LectureResponse]
