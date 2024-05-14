@@ -65,11 +65,19 @@ class LectureCreate(LectureBase):
     summary_id: py_UUID
 
 
-class LectureUpdateRequest(LectureBase):
+class LectureUpdateBase(ObjSchema):
+    name: str | None
+    description: str | None
+    pdf_file_url: str | None
+    video_url: str | None = None
+    date: py_date | None
+
+
+class LectureUpdateRequest(LectureUpdateBase):
     id: py_UUID
 
 
-class LectureUpdate(LectureBase):
+class LectureUpdate(LectureUpdateBase):
     pass
 
 

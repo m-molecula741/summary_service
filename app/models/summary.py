@@ -144,12 +144,12 @@ class SummaryChangeStatusRequest(ObjSchema):
 
 class SummaryApprovedStatus(ObjSchema):
     status: Status = Status.approved
-    moderation_comment: str | None
+    moderation_comment: str
 
 
 class SummaryRejectedStatus(ObjSchema):
     status: Status = Status.rejected
-    moderation_comment: str | None
+    moderation_comment: str
 
 
 class SummaryShortResponse(ObjSchema):

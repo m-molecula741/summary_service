@@ -31,6 +31,8 @@ async def set_approved_status(
         summary_id=summary_in.id,
         summary_in=SummaryApprovedStatus(
             moderation_comment=summary_in.modearation_comment
+            if summary_in.modearation_comment
+            else ""
         ),
     )
     return ORJSONResponse(content=is_updated, status_code=status.HTTP_200_OK)
@@ -52,6 +54,8 @@ async def set_rejected_status(
         summary_id=summary_in.id,
         summary_in=SummaryRejectedStatus(
             moderation_comment=summary_in.modearation_comment
+            if summary_in.modearation_comment
+            else ""
         ),
     )
     return ORJSONResponse(content=is_updated, status_code=status.HTTP_200_OK)

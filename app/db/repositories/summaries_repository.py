@@ -1,8 +1,7 @@
 from typing import Sequence, TypeVar
 from uuid import UUID
-from app.core.base_schemas import ObjSchema
 
-from sqlalchemy import desc, func, select, update
+from sqlalchemy import desc, func, select
 from sqlalchemy.orm import selectinload, QueryableAttribute
 
 from app.consts import SortType
@@ -108,18 +107,3 @@ class SummariesRepository(BaseRepository[SummaryModel]):
             return None, "Data not found"
 
         return res, None
-
-    async def update(
-        self, id: int | UUID, obj_in: ObjSchema
-    ) -> tuple[bool | None, str | None]:
-        try:
-            stmt = (
-                update(self.model)  # type: ignore
-                .values(**obj_in.dict())
-                .filter_by(id=id)
-            )
-            await self.session.execute(stmt)
-        except Exception as e:
-            logger.error(f"DB error from update: {e}")
-            return None, f"DB error from update: {e}"
-        return True, None

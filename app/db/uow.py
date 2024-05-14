@@ -75,27 +75,27 @@ class SqlAlchemyUnitOfWork(AbstractUOW):
 
     @property
     def lectures(self) -> lectures_repository.LecturesRepository:
-        """Доступ к репозиторию продуктов"""
+        """Доступ к репозиторию лекций"""
         return lectures_repository.LecturesRepository(self.session)
 
     @property
     def subjects(self) -> subjects_repository.SubjectsRepository:
-        """Доступ к репозиторию продуктов"""
+        """Доступ к репозиторию предметов"""
         return subjects_repository.SubjectsRepository(self.session)
 
     @property
     def teachers(self) -> teachers_repository.TeachersRepository:
-        """Доступ к репозиторию продуктов"""
+        """Доступ к репозиторию преподов"""
         return teachers_repository.TeachersRepository(self.session)
 
     @property
     def universities(self) -> universities_repository.UniversitiesRepository:
-        """Доступ к репозиторию продуктов"""
+        """Доступ к репозиторию вузов"""
         return universities_repository.UniversitiesRepository(self.session)
 
     @property
     def summaries(self) -> summaries_repository.SummariesRepository:
-        """Доступ к репозиторию продуктов"""
+        """Доступ к репозиторию конспектов"""
         return summaries_repository.SummariesRepository(self.session)
 
     @property
