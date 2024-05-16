@@ -25,9 +25,6 @@ class TeacherModel(Base):
     full_name: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, index=True, unique=True, doc="Полное имя"
     )
-    date_birth: Mapped[date] = mapped_column(
-        sa.Date, nullable=True, doc="Дата рождения"
-    )
     is_moderated: Mapped[bool] = mapped_column(
         sa.Boolean, nullable=False, doc="Статус модерации"
     )
@@ -36,7 +33,6 @@ class TeacherModel(Base):
 
 class TeacherBase(ObjSchema):
     full_name: str
-    date_birth: date
 
 
 class TeacherRequest(TeacherBase):
@@ -77,7 +73,6 @@ class TeachersResponse(PaginatedResponse):
 class TeacherUpdateRequest(ObjSchema):
     id: py_UUID
     full_name: str | None
-    date_birth: date | None
 
 
 class TeacherUpdate(ObjSchema):

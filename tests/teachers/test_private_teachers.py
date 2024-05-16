@@ -16,7 +16,7 @@ def test_add_teacher_positive(client: TestClient, teacher_in_db: TeacherModel) -
 
         response = client.post(
             f"{config.private_prefix}/teachers",
-            json={"full_name": "test", "date_birth": "2024-05-10"},
+            json={"full_name": "test"},
         )
     assert response.status_code == status.HTTP_201_CREATED
 
@@ -30,6 +30,6 @@ def test_add_teacher_negative(client: TestClient, teacher_in_db: TeacherModel) -
 
         response = client.post(
             f"{config.private_prefix}/teachers",
-            json={"full_name": "test", "date_birth": "2024-05-10"},
+            json={"full_name": "test"},
         )
     assert response.status_code == status.HTTP_400_BAD_REQUEST

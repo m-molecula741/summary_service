@@ -22,6 +22,6 @@ def summary_in_db() -> SummaryModel:
         university=UniversityModel(id=1, name="test", short_name="test"),
         subject=SubjectModel(id=1, name="test", is_moderated=True),
         teacher=TeacherModel(
-            id=uuid7(), full_name="test", date_birth="2024-05-10", is_moderated=True
+            id=uuid7(), full_name="test", is_moderated=True
         ),
     )
