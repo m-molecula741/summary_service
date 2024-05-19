@@ -139,7 +139,7 @@ class SummaryResponse(ObjSchema):
 
 class SummaryChangeStatusRequest(ObjSchema):
     id: py_UUID
-    modearation_comment: str | None = None
+    moderation_comment: str | None = None
 
 
 class SummaryApprovedStatus(ObjSchema):

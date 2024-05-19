@@ -30,8 +30,8 @@ async def set_approved_status(
         uow=uow,
         summary_id=summary_in.id,
         summary_in=SummaryApprovedStatus(
-            moderation_comment=summary_in.modearation_comment
-            if summary_in.modearation_comment
+            moderation_comment=summary_in.moderation_comment
+            if summary_in.moderation_comment
             else ""
         ),
     )
@@ -53,8 +53,8 @@ async def set_rejected_status(
         uow=uow,
         summary_id=summary_in.id,
         summary_in=SummaryRejectedStatus(
-            moderation_comment=summary_in.modearation_comment
-            if summary_in.modearation_comment
+            moderation_comment=summary_in.moderation_comment
+            if summary_in.moderation_comment
             else ""
         ),
     )
