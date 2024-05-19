@@ -73,6 +73,8 @@ class SummaryService:
         async with uow:
             if summary_status == Status.approved:
                 moderation_comment = MODERATION_ACCESS
+            else:
+                 moderation_comment = None
             is_updated, err = await uow.summaries.update(
                 id=summary.id,
                 obj_in=SummaryUpdate(
