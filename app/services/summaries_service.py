@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import HTTPException, status
 from uuid_extensions import uuid7
 
+from app.consts import MODERATION_ACCESS
 from app.core.base_schemas import ObjSchema
 from app.db.uow import SqlAlchemyUnitOfWork as UOW
 from app.models.enums.status import Status
@@ -47,9 +48,17 @@ class SummaryService:
         cls, uow: UOW, summary: SummaryRequest, summary_status: Status, user_id: UUID
     ) -> UUID:
         async with uow:
+            if summary_status == Status.approved:
+                moderation_comment = MODERATION_ACCESS
+            else:
+                moderation_comment = None
             summary, err = await uow.summaries.add(
                 obj_in=SummaryCreate(
-                    **summary.dict(), id=uuid7(), status=summary_status, user_id=user_id
+                    **summary.dict(),
+                    moderation_comment=moderation_comment,
+                    id=uuid7(),
+                    status=summary_status,
+                    user_id=user_id
                 )
             )
             if err:
@@ -62,9 +71,15 @@ class SummaryService:
         cls, uow: UOW, summary: SummaryUpdateRequest, summary_status: Status
     ) -> bool:
         async with uow:
+            if summary_status == Status.approved:
+                moderation_comment = MODERATION_ACCESS
             is_updated, err = await uow.summaries.update(
                 id=summary.id,
-                obj_in=SummaryUpdate(**summary.dict(), status=summary_status),
+                obj_in=SummaryUpdate(
+                    **summary.dict(),
+                    moderation_comment=moderation_comment,
+                    status=summary_status
+                ),
             )
             if err:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)

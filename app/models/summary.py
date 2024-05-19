@@ -105,6 +105,7 @@ class SummaryUpdateRequest(SummaryBaseUpdate):
 
 class SummaryUpdate(SummaryBaseUpdate):
     status: Status
+    moderation_comment: str | None
 
 
 class SummaryResponse(ObjSchema):

@@ -21,7 +21,5 @@ def summary_in_db() -> SummaryModel:
         user_id=uuid7(),
         university=UniversityModel(id=1, name="test", short_name="test"),
         subject=SubjectModel(id=1, name="test", is_moderated=True),
-        teacher=TeacherModel(
-            id=uuid7(), full_name="test", is_moderated=True
-        ),
+        teacher=TeacherModel(id=uuid7(), full_name="test", is_moderated=True),
     )

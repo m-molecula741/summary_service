@@ -9,3 +9,4 @@ class SortType(str, Enum):
 
 
 CONTENT_TYPE_PDF = ["application/pdf"]
+MODERATION_ACCESS = "Конспект прошел модерацию"

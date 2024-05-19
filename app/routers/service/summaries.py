@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import ORJSONResponse
 
+from app.consts import MODERATION_ACCESS
 from app.models.summary import (
     QuerySummaries,
     SummariesResponse,
@@ -32,7 +33,7 @@ async def set_approved_status(
         summary_in=SummaryApprovedStatus(
             moderation_comment=summary_in.moderation_comment
             if summary_in.moderation_comment
-            else ""
+            else MODERATION_ACCESS
         ),
     )
     return ORJSONResponse(content=is_updated, status_code=status.HTTP_200_OK)
