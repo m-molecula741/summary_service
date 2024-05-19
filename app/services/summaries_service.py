@@ -98,6 +98,7 @@ class SummaryService:
                 name=summary_in_db.name,
                 user_id=summary_in_db.user_id,
                 university=summary_in_db.university,
+                moderation_comment=summary_in_db.moderation_comment,
                 subject=summary_in_db.subject,
                 teacher=summary_in_db.teacher,
                 status=summary_in_db.status,
