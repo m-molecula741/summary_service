@@ -84,5 +84,5 @@ router_service.include_router(
     prefix="/universities",
 )
 router_service.include_router(
-    service_comments.router, tags=["Admin comments routers"], prefix="/summaries"
+    service_comments.router, tags=["Admin comments routers"], prefix="/comments"
 )
