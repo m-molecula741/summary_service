@@ -6,6 +6,7 @@ from app.routers.private import (
     subjects as private_subjects,
     summaries as private_summaries,
     teachers as private_teachers,
+    comments as private_comments,
 )
 from app.routers.public import (
     files as public_files,
@@ -13,10 +14,12 @@ from app.routers.public import (
     summaries as public_summaries,
     teachers as public_teachers,
     uviversities as public_universities,
+    comments as public_comments,
 )
 from app.routers.service import (
     summaries as service_summaries,
     universities as service_universities,
+    comments as service_comments,
 )
 
 router_public = APIRouter()
@@ -36,6 +39,9 @@ router_public.include_router(
 )
 router_public.include_router(
     public_files.router, tags=["Public files routers"], prefix="/files"
+)
+router_public.include_router(
+    public_comments.router, tags=["Public comments routers"], prefix="/comments"
 )
 
 router_private = APIRouter()
@@ -62,6 +68,11 @@ router_private.include_router(
     tags=["Private files routers"],
     prefix="/files",
 )
+router_private.include_router(
+    private_comments.router,
+    tags=["Private comments routers"],
+    prefix="/comments",
+)
 
 router_service = APIRouter()
 router_service.include_router(
@@ -71,4 +82,7 @@ router_service.include_router(
     service_universities.router,
     tags=["Admin universities routers"],
     prefix="/universities",
+)
+router_service.include_router(
+    service_comments.router, tags=["Admin comments routers"], prefix="/summaries"
 )

@@ -105,3 +105,22 @@ async def check_access_lecture_for_add(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
 
     return None
+
+
+async def check_access_comment(
+    request: Request, uow: UOWDep, user: User = Depends(get_current_user)
+) -> None:
+    if user.is_superuser:
+        return None
+
+    comment_id = await get_id_from_request(
+        request=request, query_id_name="comment_id", body_id_name="id"
+    )
+    comment_in_db, err = await uow.comments.find_one(id=comment_id)
+    if err:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
+
+    if comment_in_db.user_id != user.id:  # type: ignore
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No rights")
+
+    return None

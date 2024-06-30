@@ -12,6 +12,7 @@ from app.db.repositories import (
     summaries_repository,
     teachers_repository,
     universities_repository,
+    comments_repository,
 )
 
 
@@ -102,3 +103,8 @@ class SqlAlchemyUnitOfWork(AbstractUOW):
     def files(self) -> files_repository.FilesRepository:
         """Доступ к репозиторию файлов"""
         return files_repository.FilesRepository(self.session)
+
+    @property
+    def comments(self) -> comments_repository.CommentsRepository:
+        """Доступ к репозиторию комментариев"""
+        return comments_repository.CommentsRepository(self.session)

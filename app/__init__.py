@@ -1,1 +1,1 @@
-from app.models import lecture, subject, summary, teacher, university  # type: ignore
+from app.models import lecture, subject, summary, teacher, university, comment  # type: ignore

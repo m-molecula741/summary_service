@@ -74,7 +74,7 @@ class SummaryService:
             if summary_status == Status.approved:
                 moderation_comment = MODERATION_ACCESS
             else:
-                 moderation_comment = None
+                moderation_comment = None
             is_updated, err = await uow.summaries.update(
                 id=summary.id,
                 obj_in=SummaryUpdate(
@@ -202,3 +202,15 @@ class SummaryService:
         )
 
         return summaries_resp
+
+    @classmethod
+    async def is_approved(cls, uow: UOW, summary_id: UUID) -> bool:
+        async with uow:
+            summary_db, err = await uow.summaries.find_one(id=summary_id)
+            if err:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=err)
+
+            if summary_db.status != Status.approved:
+                return False
+
+            return True
