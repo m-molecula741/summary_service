@@ -33,7 +33,7 @@ async def add_comment(
 
 
 @router.delete(
-    path="/{comment_id}", status_code=status.HTTP_201_CREATED, response_model=bool
+    path="/{comment_id}", status_code=status.HTTP_200_OK, response_model=bool
 )
 async def delete_comment(
     comment_id: UUID,
