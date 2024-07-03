@@ -33,16 +33,16 @@ async def add_comment(
 
 
 @router.delete(
-    path="/{comment_id}", status_code=status.HTTP_201_CREATED, response_model=UUID
+    path="/{comment_id}", status_code=status.HTTP_201_CREATED, response_model=bool
 )
 async def delete_comment(
     comment_id: UUID,
     uow: UOWDep,
     _=Depends(check_access_comment),
-) -> UUID:
+) -> bool:
     """Ручка удаления коммента"""
-    comment_id = await CommentService.delete_comment(uow=uow, comment_id=comment_id)
-    return comment_id
+    is_deleted = await CommentService.delete_comment(uow=uow, comment_id=comment_id)
+    return is_deleted
 
 
 @router.patch(
