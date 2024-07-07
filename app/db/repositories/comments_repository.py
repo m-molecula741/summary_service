@@ -14,13 +14,18 @@ ModelType = TypeVar("ModelType", bound=Base)
 
 class CommentsRepository(BaseRepository[CommentModel]):
     async def get_comments(
-        self, query: QueryComments, summary_id: UUID, is_complain: bool = False
+        self,
+        query: QueryComments,
+        summary_id: UUID | None = None,
+        is_complain: bool = False,
     ) -> tuple[Sequence[CommentModel], int | None, str | None]:
         """Получение списка сущностей с учетом пагинации и сортировки"""
-        select_count = select(func.count(self.model.id)).filter(
-            self.model.summary_id == summary_id
-        )
-        stmt = select(self.model).filter(self.model.summary_id == summary_id)
+        select_count = select(func.count(self.model.id))
+        stmt = select(self.model)
+
+        if summary_id:
+            select_count = select_count.filter(self.model.summary_id == summary_id)
+            stmt = stmt.filter(self.model.summary_id == summary_id)
 
         if is_complain:
             select_count = select_count.filter(self.model.is_complain)

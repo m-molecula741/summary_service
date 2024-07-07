@@ -13,20 +13,17 @@ router = APIRouter()
 
 
 @router.get(
-    path="/{summary_id}",
+    path="",
     status_code=status.HTTP_200_OK,
     response_model=CommentsResponse,
 )
 async def get_comments(
-    summary_id: UUID,
     uow: UOWDep,
     query: QueryComments = Depends(),
     user: User = Depends(check_is_superuser),
 ) -> CommentsResponse:
     """Ручка получения комментариев с жалобами на конспект"""
-    comments = await CommentService.get_comments(
-        uow=uow, query=query, summary_id=summary_id, is_complain=True
-    )
+    comments = await CommentService.get_comments(uow=uow, query=query, is_complain=True)
     return comments
 
 

@@ -43,7 +43,11 @@ class CommentService:
 
     @classmethod
     async def get_comments(
-        cls, uow: UOW, query: QueryComments, summary_id: UUID, is_complain: bool = False
+        cls,
+        uow: UOW,
+        query: QueryComments,
+        summary_id: UUID | None = None,
+        is_complain: bool = False,
     ) -> CommentsResponse:
         async with uow:
             comments, count, err = await uow.comments.get_comments(
