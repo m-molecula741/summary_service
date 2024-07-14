@@ -35,7 +35,6 @@ async def get_comments(
 async def approve_comment(
     comment_id: UUID,
     uow: UOWDep,
-    query: QueryComments = Depends(),
     user: User = Depends(check_is_superuser),
 ) -> bool:
     """Ручка утверждения комментария"""
