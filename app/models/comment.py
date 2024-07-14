@@ -30,12 +30,12 @@ class CommentModel(Base):
     )
     created_at: Mapped[datetime] = mapped_column(
         sa.DateTime,
-        default=datetime.utcnow(),
+        default=datetime.utcnow,
         nullable=False,
     )
     updated_at: Mapped[datetime] = mapped_column(
         sa.DateTime,
-        onupdate=datetime.utcnow(),
+        onupdate=datetime.utcnow,
         nullable=True,
     )
     is_moderated: Mapped[bool] = mapped_column(
